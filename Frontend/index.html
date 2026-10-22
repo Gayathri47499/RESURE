@@ -673,7 +673,7 @@ const store = {
   del(k){ try{ localStorage.removeItem(k) }catch(e){} }
 };;
 /* ---------- Backend integration ---------- */
-const API_BASE = (window.HOSPICARE_API_BASE || 'http://127.0.0.1:8000/api/v1').replace(/\/$/, '');
+const API_BASE = (window.HOSPICARE_API_BASE || 'https://resure-backend.onrender.com/api/v1').replace(/\/$/, '');
 function safeUser(){ try { return JSON.parse(store.get('resure-user') || '{}'); } catch { return {}; } }
 async function api(path, options={}) {
   const headers = {'Accept':'application/json', ...(options.headers||{})};
