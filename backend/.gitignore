@@ -1,0 +1,14 @@
+.venv/
+__pycache__/
+*.py[cod]
+.env
+data/
+*.joblib
+*.safetensors
+*.pt
+*.pth
+service-account*.json
+.pytest_cache/
+.coverage
+
+secrets/

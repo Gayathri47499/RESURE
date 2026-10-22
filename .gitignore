@@ -1,0 +1,28 @@
+
+# Secrets and credentials
+.env
+.env.*
+!.env.example
+**/secrets/
+**/service-account*.json
+**/*firebase-adminsdk*.json
+
+# Python
+**/.venv/
+**/__pycache__/
+**/*.py[cod]
+.pytest_cache/
+**/.pytest_cache/
+.coverage
+
+# Model artifacts and local data
+**/*.joblib
+**/*.safetensors
+**/*.pt
+**/*.pth
+**/data/
+**/audit.jsonl
+
+# Frontend
+**/node_modules/
+**/dist/
