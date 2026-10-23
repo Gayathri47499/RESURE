@@ -22,7 +22,7 @@
          avatar-1.png ... avatar-5.png
   Run with VS Code "Live Server" (right click index.html > Open with Live Server)
   Sign in using the Firebase account registered through the backend.
-  Connect your backend: search for "TODO-BACKEND" in the script below.
+  Backend API is configured in the script below.
   ================================================================
 -->
 
@@ -485,8 +485,8 @@ tbody tr:hover{background:var(--surface-2)}
       <button data-view="analytics"><svg class="ic"><use href="#i-bars"/></svg>Analytics</button>
     </nav>
     <div class="side-card">
-      <h4>Baseline model connected</h4>
-      <p>Model outputs are experimental and not clinically validated.</p>
+      <h4>Qwen research model</h4>
+      <p>Experimental class predictions only. Not clinically validated.</p>
       <button class="btn" data-goto="analytics">View performance</button>
     </div>
   </aside>
@@ -525,7 +525,7 @@ tbody tr:hover{background:var(--surface-2)}
         <div class="grid g4 mt">
           <div class="card hover kpi reveal" style="--d:.05s">
             <div class="kpi-top"><div class="ico" style="background:rgba(37,99,235,.12);color:var(--primary)"><svg class="ic"><use href="#i-users"/></svg></div><span class="trend up-good"><svg class="ic"><use href="#i-up"/></svg>8.2%</span></div>
-            <div><div class="val" data-count="1284">0</div><div class="lbl">Predictions recorded (account)</div></div>
+            <div><div class="val" data-count="1284">0</div><div class="lbl">Sample count (demo, not live)</div></div>
             <svg class="spark" viewBox="0 0 120 36" preserveAspectRatio="none"><path pathLength="1" d="M0 28 C15 26 20 14 35 18 S55 30 70 16 S95 8 120 4" stroke="#2563eb"/></svg>
           </div>
           <div class="card hover kpi reveal" style="--d:.1s">
@@ -587,9 +587,9 @@ tbody tr:hover{background:var(--surface-2)}
               <div class="field"><label>Admissions in past 12 months</label><div class="range-row"><input type="range" id="p-prior" min="0" max="10" value="1"><output>1</output></div></div>
               <div class="field"><label>Chronic conditions</label><div class="range-row"><input type="range" id="p-comorb" min="0" max="8" value="2"><output>2</output></div></div>
               <div class="field"><label>Medications at discharge</label><div class="range-row"><input type="range" id="p-meds" min="0" max="25" value="7"><output>7</output></div></div>
-              <div class="field"><label>Sodium (mmol/L)</label><input class="plain" type="number" id="p-na" value="139" step="1"></div>
-              <div class="field"><label>Hemoglobin (g/dL)</label><input class="plain" type="number" id="p-hb" value="12.4" step="0.1"></div>
-              <label class="switch full"><span>Emergency admission</span><input type="checkbox" id="p-emerg"><span class="tr"></span></label>
+              <div class="field"><label>Sodium (mmol/L) <span style="color:var(--muted);font-weight:400">(not used by model)</span></label><input class="plain" type="number" id="p-na" value="139" step="1" aria-describedby="unusedInputsNote"></div>
+              <div class="field"><label>Hemoglobin (g/dL) <span style="color:var(--muted);font-weight:400">(not used by model)</span></label><input class="plain" type="number" id="p-hb" value="12.4" step="0.1" aria-describedby="unusedInputsNote"></div>
+              <p class="full" id="unusedInputsNote" style="font-size:12px;color:var(--muted)">Research prototype: some displayed inputs are mapped to fixed/default values. Sodium and hemoglobin are not sent to the current Qwen model. Do not use this output for clinical decisions.</p><label class="switch full"><span>Emergency admission</span><input type="checkbox" id="p-emerg"><span class="tr"></span></label>
               <div class="full btn-row"><button class="btn btn-primary" id="predictBtn" type="submit"><span>Calculate risk</span><svg class="ic"><use href="#i-activity"/></svg></button><button class="btn btn-ghost" type="reset" id="resetBtn">Reset</button></div>
             </form>
           </div>
@@ -629,28 +629,28 @@ tbody tr:hover{background:var(--surface-2)}
 
       <!-- ============ ANALYTICS ============ -->
       <section class="view" id="view-analytics">
-        <div class="page-head reveal"><div><h2>Analytics</h2><p>Model performance and readmission insights across the hospital.</p></div></div>
+        <div class="page-head reveal"><div><h2>Analytics</h2><p>Illustrative demo charts only; this page is not connected to verified hospital outcome data.</p></div></div>
         <div class="grid g-1-1">
           <div class="card reveal" style="--d:.05s">
-            <div class="card-head"><div><h3>Model performance</h3><small>Validated on 12k held-out discharges</small></div></div>
+            <div class="card-head"><div><h3>Model performance</h3><small>Illustrative placeholder metrics — validation not established</small></div></div>
             <div class="g3m">
-              <div class="metric"><b data-count="0.87" data-dec="2">0</b><small>AUC-ROC</small></div>
-              <div class="metric"><b data-count="94" data-suffix="%">0</b><small>Accuracy</small></div>
-              <div class="metric"><b data-count="0.81" data-dec="2">0</b><small>F1 score</small></div>
+              <div class="metric"><b>—</b><small>AUC-ROC (not established)</small></div>
+              <div class="metric"><b>—</b><small>Accuracy (not established)</small></div>
+              <div class="metric"><b>—</b><small>F1 score (not established)</small></div>
             </div>
             <div class="g3m" style="margin-top:12px">
-              <div class="metric"><b data-count="0.84" data-dec="2">0</b><small>Precision</small></div>
-              <div class="metric"><b data-count="0.79" data-dec="2">0</b><small>Recall</small></div>
-              <div class="metric"><b data-count="3.2" data-dec="1">0</b><small>Version</small></div>
+              <div class="metric"><b>—</b><small>Precision (not established)</small></div>
+              <div class="metric"><b>—</b><small>Recall (not established)</small></div>
+              <div class="metric"><b>Qwen</b><small>Research model</small></div>
             </div>
           </div>
           <div class="card reveal" style="--d:.1s">
-            <div class="card-head"><div><h3>Feature importance</h3><small>What drives the predictions</small></div></div>
+            <div class="card-head"><div><h3>Feature importance</h3><small>Illustrative only; not model explanations</small></div></div>
             <div id="featureBars"></div>
           </div>
         </div>
         <div class="card mt reveal" style="--d:.15s">
-          <div class="card-head"><div><h3>Readmission rate by diagnosis</h3><small>30-day rate, current quarter</small></div></div>
+          <div class="card-head"><div><h3>Readmission rate by diagnosis</h3><small>Illustrative demo values; not live hospital data</small></div></div>
           <div id="dxBars"></div>
         </div>
       </section>
@@ -1012,69 +1012,105 @@ function makeModelFeatures(f){
   };
 }
 function recsFor(){
-  return ['This result is generated by an experimental baseline model and is not clinically validated.',
-          'Do not use this score for diagnosis, discharge, treatment, or patient-care decisions.'];
+  return [
+    'This result comes from an experimental research model and has not been clinically validated.',
+    'Do not use this classification for diagnosis, discharge, treatment, or any patient-care decision.'
+  ];
 }
 $('#predictForm').addEventListener('submit', async e => {
   e.preventDefault();
-  if(!sessionStorage.getItem('resure-id-token')) { toast('Please sign in with your Firebase account first.'); return; }
-  const f = {age:+$('#p-age').value, gender:$('#p-gender').value, dx:$('#p-dx').value, disp:$('#p-disp').value,
-    los:+$('#p-los').value, prior:+$('#p-prior').value, comorb:+$('#p-comorb').value, meds:+$('#p-meds').value,
-    na:+$('#p-na').value, hb:+$('#p-hb').value, emerg:$('#p-emerg').checked};
-  const btn = $('#predictBtn'); btn.disabled = true; btn.innerHTML = '<div class="spinner"></div><span>Requesting model...</span>';
+  if (!sessionStorage.getItem('resure-id-token')) {
+    toast('Please sign in with your Firebase account first.');
+    return;
+  }
+
+  const f = {
+    age: +$('#p-age').value,
+    gender: $('#p-gender').value,
+    dx: $('#p-dx').value,
+    disp: $('#p-disp').value,
+    los: +$('#p-los').value,
+    prior: +$('#p-prior').value,
+    comorb: +$('#p-comorb').value,
+    meds: +$('#p-meds').value,
+    na: +$('#p-na').value,
+    hb: +$('#p-hb').value,
+    emerg: $('#p-emerg').checked
+  };
+
+  const btn = $('#predictBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<div class="spinner"></div><span>Requesting model...</span>';
+
   try {
-    const result = await api('/predictions', {method:'POST', body:JSON.stringify({features:makeModelFeatures(f)})});
-   
-const predictedClass = Number(result.readmission_within_30_days);
+    const result = await api('/predictions', {
+      method: 'POST',
+      body: JSON.stringify({features: makeModelFeatures(f)})
+    });
 
-if (![0, 1].includes(predictedClass)) {
-  throw new Error('The backend did not return a valid Qwen classification.');
-}
+    const predictedClass = Number(result.readmission_within_30_days);
+    if (predictedClass !== 0 && predictedClass !== 1) {
+      throw new Error('The backend did not return a valid Qwen class (0 or 1).');
+    }
 
-// Display a class label, NOT a probability percentage.
-const p = 0;
-showResult({p, factors:[]}, f);
+    showResult({classification: predictedClass});
 
-const summary = $('#gSummary');
-if (summary) {
-  summary.textContent =
-    `Qwen research classification: ${
-      predictedClass === 1
-        ? 'Readmission predicted within 30 days'
-        : 'Readmission not predicted within 30 days'
-    }. This is a class label, not a probability. Research only — not clinically validated.`;
-}
-
-$('#gPct').textContent = predictedClass === 1 ? 'Class 1' : 'Class 0';
-
-    try { await refreshBackendData(); } catch {}
-  } catch(err) {
+    try { await refreshBackendData(); } catch (refreshError) {
+      console.warn('Could not refresh account summary:', refreshError);
+    }
+  } catch (err) {
+    console.error('RESURE prediction failed:', err);
     toast('Prediction failed: ' + err.message);
   } finally {
-    btn.disabled = false; btn.innerHTML = '<span>Calculate risk</span><svg class="ic"><use href="#i-activity"/></svg>';
+    btn.disabled = false;
+    btn.innerHTML = '<span>Calculate research classification</span><svg class="ic"><use href="#i-activity"/></svg>';
   }
 });
+
 $('#resetBtn').addEventListener('click', () => {
-  setTimeout(()=>$$('.range-row input').forEach(i=>i.nextElementSibling.value=i.value),0);
-  $('#resultBody').hidden = true; $('#emptyState').hidden = false;
+  setTimeout(() => {
+    $$('.range-row input').forEach(i => {
+      if (i.nextElementSibling) i.nextElementSibling.value = i.value;
+    });
+    $('#resultBody').hidden = true;
+    $('#emptyState').hidden = false;
+  }, 0);
 });
-function showResult({p,factors}, f){
-  const [,label,,col] = level(p), key = level(p)[0];
-  const grad = key==='high' ? 'gRed' : key==='med' ? 'gAmber' : 'gGreen';
-  const icon = key==='high' ? '#i-alert' : key==='med' ? '#i-alert' : '#i-shield';
-  $('#emptyState').hidden = true; $('#resultBody').hidden = false;
-  const prog = $('#gProg'); prog.setAttribute('stroke-dasharray','0 503'); prog.setAttribute('stroke',`url(#${grad})`);
-  $('#gIcon use').setAttribute('href', icon); $('#gIcon').style.color = col;
-  $('#gLabel').textContent = label.toUpperCase()+' RISK'; $('#gLabel').style.color = col;
-  setTimeout(()=>prog.setAttribute('stroke-dasharray', `${377*p/100} 503`), 80);
-  const t0 = performance.now();
-  (function tick(n){ const k=Math.min((n-t0)/1600,1), e=1-Math.pow(1-k,3); $('#gPct').textContent = Math.round(p*e)+'%'; if(k<1) requestAnimationFrame(tick); })(t0);
-  $('#gSummary').textContent = 'Qwen output is a class label, not a probability. Research only; not clinically validated.';
-  const max = Math.max(...factors.map(x=>x[1]),.01);
-  $('#factors').innerHTML = factors.length ? factors.map(([n,v])=>`<div class="factor"><span>${n}</span><div class="bar"><span data-w="${Math.round(v/max*100)}" style="background:${col}"></span></div><b>+${Math.round(v/max*100)}</b></div>`).join('') : '<p style="color:var(--muted);font-size:13px">No significant risk drivers detected.</p>';
-  growBars($('#factors'));
-  $('#recs').innerHTML = recsFor(p,f).map((t,i)=>`<div class="rec" style="animation-delay:${i*.1}s"><svg class="ic"><use href="#i-check"/></svg><span>${t}</span></div>`).join('');
-  toast('Risk prediction complete');
+
+function showResult({classification}) {
+  const isPositive = classification === 1;
+  const color = isPositive ? '#b45309' : '#2563eb';
+  const icon = isPositive ? '#i-alert' : '#i-shield';
+
+  $('#emptyState').hidden = true;
+  $('#resultBody').hidden = false;
+
+  const prog = $('#gProg');
+  prog.setAttribute('stroke-dasharray', '0 503');
+  prog.setAttribute('stroke', color);
+  $('#gIcon use').setAttribute('href', icon);
+  $('#gIcon').style.color = color;
+
+  $('#gLabel').textContent = isPositive
+    ? 'READMISSION PREDICTED'
+    : 'READMISSION NOT PREDICTED';
+  $('#gLabel').style.color = color;
+
+  // Decorative arc only: it does not represent probability or confidence.
+  setTimeout(() => prog.setAttribute('stroke-dasharray', '250 503'), 80);
+  $('#gPct').textContent = isPositive ? 'Class 1' : 'Class 0';
+  $('#gSummary').textContent = isPositive
+    ? 'The experimental Qwen model classified this input as readmission within 30 days. Class 1 is not a probability or a measure of certainty. Research use only; not clinically validated.'
+    : 'The experimental Qwen model did not classify this input as readmission within 30 days. Class 0 does not guarantee that readmission will not occur. This is not a probability or a measure of certainty. Research use only; not clinically validated.';
+
+  $('#factors').innerHTML =
+    '<p style="color:var(--muted);font-size:13px">The Qwen model does not return feature-level explanations for this prediction. No contributing factors are shown.</p>';
+
+  $('#recs').innerHTML = recsFor().map((t, i) =>
+    `<div class="rec" style="animation-delay:${i * 0.1}s"><svg class="ic"><use href="#i-check"/></svg><span>${escapeHtml(t)}</span></div>`
+  ).join('');
+
+  toast('Research classification complete');
 }
 document.addEventListener('click', e => {
   const b = e.target.closest('[data-assess]'); if(!b) return;
