@@ -1032,7 +1032,7 @@ if (![0, 1].includes(predictedClass)) {
 }
 
 // Display a class label, NOT a probability percentage.
-const p = predictedClass === 1 ? 100 : 0;
+const p = 0;
 showResult({p, factors:[]}, f);
 
 const summary = $('#gSummary');
@@ -1069,7 +1069,7 @@ function showResult({p,factors}, f){
   setTimeout(()=>prog.setAttribute('stroke-dasharray', `${377*p/100} 503`), 80);
   const t0 = performance.now();
   (function tick(n){ const k=Math.min((n-t0)/1600,1), e=1-Math.pow(1-k,3); $('#gPct').textContent = Math.round(p*e)+'%'; if(k<1) requestAnimationFrame(tick); })(t0);
-  $('#gSummary').textContent = `Backend model estimate: ${p}% probability. Research only; not clinically validated.`;
+  $('#gSummary').textContent = 'Qwen output is a class label, not a probability. Research only; not clinically validated.';
   const max = Math.max(...factors.map(x=>x[1]),.01);
   $('#factors').innerHTML = factors.length ? factors.map(([n,v])=>`<div class="factor"><span>${n}</span><div class="bar"><span data-w="${Math.round(v/max*100)}" style="background:${col}"></span></div><b>+${Math.round(v/max*100)}</b></div>`).join('') : '<p style="color:var(--muted);font-size:13px">No significant risk drivers detected.</p>';
   growBars($('#factors'));
