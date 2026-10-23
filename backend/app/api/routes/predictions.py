@@ -24,18 +24,21 @@ async def create_prediction(
     if not user_id:
         raise HTTPException(status_code=401, detail="Authenticated user ID is missing.")
 
+    
     try:
-     result = predict_with_qwen(payload.features)
+        result = predict_with_qwen(payload.features)
     except Exception:
-     raise HTTPException(
-        status_code=503,
-        detail=(
-            "Qwen inference is temporarily unavailable. "
-            "Please try again later."
-        ),
-    )
+        raise HTTPException(
+            status_code=503,
+            detail=(
+                "Qwen inference is temporarily unavailable. "
+                "Please try again later."
+            ),
+        )
+
     result["created_at"] = datetime.now(timezone.utc)
     response = PredictionResponse(**result)
+
 
     # Log metadata only; never include patient feature values.
     try:

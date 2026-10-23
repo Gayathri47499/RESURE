@@ -1048,12 +1048,22 @@ $('#predictForm').addEventListener('submit', async e => {
       body: JSON.stringify({features: makeModelFeatures(f)})
     });
 
-    const predictedClass = Number(result.readmission_within_30_days);
-    if (predictedClass !== 0 && predictedClass !== 1) {
-      throw new Error('The backend did not return a valid Qwen class (0 or 1).');
-    }
+    
+const predictedClass = Number(result.readmission_within_30_days);
 
-    showResult({classification: predictedClass});
+if (predictedClass !== 0 && predictedClass !== 1) {
+  throw new Error('The backend did not return a valid Qwen class (0 or 1).');
+}
+
+const class0Score = result.relative_class_0_score;
+const class1Score = result.relative_class_1_score;
+
+showResult({
+  classification: predictedClass,
+  relativeClass0Score: class0Score,
+  relativeClass1Score: class1Score
+});
+
 
     try { await refreshBackendData(); } catch (refreshError) {
       console.warn('Could not refresh account summary:', refreshError);
@@ -1077,7 +1087,12 @@ $('#resetBtn').addEventListener('click', () => {
   }, 0);
 });
 
-function showResult({classification}) {
+
+function showResult({
+  classification,
+  relativeClass0Score = null,
+  relativeClass1Score = null
+}) {
   const isPositive = classification === 1;
   const color = isPositive ? '#b45309' : '#2563eb';
   const icon = isPositive ? '#i-alert' : '#i-shield';
@@ -1096,15 +1111,39 @@ function showResult({classification}) {
     : 'READMISSION NOT PREDICTED';
   $('#gLabel').style.color = color;
 
-  // Decorative arc only: it does not represent probability or confidence.
+  // Decorative arc only; it does not represent probability or confidence.
   setTimeout(() => prog.setAttribute('stroke-dasharray', '250 503'), 80);
+
   $('#gPct').textContent = isPositive ? 'Class 1' : 'Class 0';
-  $('#gSummary').textContent = isPositive
-    ? 'The experimental Qwen model classified this input as readmission within 30 days. Class 1 is not a probability or a measure of certainty. Research use only; not clinically validated.'
-    : 'The experimental Qwen model did not classify this input as readmission within 30 days. Class 0 does not guarantee that readmission will not occur. This is not a probability or a measure of certainty. Research use only; not clinically validated.';
+
+  const validScore = value =>
+    typeof value === 'number' &&
+    Number.isFinite(value) &&
+    value >= 0 &&
+    value <= 1;
+
+  const hasScores =
+    validScore(relativeClass0Score) &&
+    validScore(relativeClass1Score);
+
+  const scoreText = hasScores
+    ? `Relative Class 0 score: ${(relativeClass0Score * 100).toFixed(1)}%\n` +
+      `Relative Class 1 score: ${(relativeClass1Score * 100).toFixed(1)}%`
+    : 'Relative model scores are unavailable for this prediction.';
+
+  $('#gSummary').textContent =
+    (isPositive
+      ? 'The experimental Qwen model classified this input as readmission within 30 days. '
+      : 'The experimental Qwen model did not classify this input as readmission within 30 days. ') +
+    '\n\n' + scoreText +
+    '\n\nThese scores reflect relative next-token preference between Class 0 and Class 1. ' +
+    'They are NOT calibrated readmission probabilities or validated clinical risk percentages. ' +
+    'Research use only; not clinically validated. Do not use for patient-care decisions.';
 
   $('#factors').innerHTML =
-    '<p style="color:var(--muted);font-size:13px">The Qwen model does not return feature-level explanations for this prediction. No contributing factors are shown.</p>';
+    '<p style="color:var(--muted);font-size:13px">' +
+    'The Qwen model does not return feature-level explanations for this prediction. ' +
+    'No contributing factors are shown.</p>';
 
   $('#recs').innerHTML = recsFor().map((t, i) =>
     `<div class="rec" style="animation-delay:${i * 0.1}s"><svg class="ic"><use href="#i-check"/></svg><span>${escapeHtml(t)}</span></div>`
@@ -1112,6 +1151,7 @@ function showResult({classification}) {
 
   toast('Research classification complete');
 }
+
 document.addEventListener('click', e => {
   const b = e.target.closest('[data-assess]'); if(!b) return;
   const p = PATIENTS.find(x=>x.n===b.dataset.assess); show('predict');
