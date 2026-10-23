@@ -10,13 +10,15 @@ app = FastAPI(
     description="HospiCare AI research prototype. Not clinically validated; not for patient-care decisions.",
 )
 origins = [x.strip() for x in settings.cors_origins.split(",") if x.strip()]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins or ["http://localhost:5173"],
+    allow_origins=["https://resure-frontend.onrender.com"],
     allow_credentials=True,
-    allow_methods=["GET", "POST", "OPTIONS"],
-    allow_headers=["Authorization", "Content-Type"],
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
+
 app.include_router(health.router, prefix=settings.api_v1_prefix, tags=["Health"])
 app.include_router(auth.router, prefix=settings.api_v1_prefix, tags=["Authentication"])
 app.include_router(predictions.router, prefix=settings.api_v1_prefix, tags=["Predictions"])
