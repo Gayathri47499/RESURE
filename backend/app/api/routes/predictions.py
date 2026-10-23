@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 
 from app.core.security import get_current_user
 from app.schemas.prediction import PredictionRequest, PredictionResponse
-from app.services.prediction_service import predict
+from app.services.qwen_remote_service import predict_with_qwen
 from app.services.audit_service import write_audit_event
 from app.services.firebase_service import get_firestore_client
 
@@ -24,7 +24,16 @@ async def create_prediction(
     if not user_id:
         raise HTTPException(status_code=401, detail="Authenticated user ID is missing.")
 
-    result = predict(payload.features)
+    try:
+     result = predict_with_qwen(payload.features)
+    except Exception:
+     raise HTTPException(
+        status_code=503,
+        detail=(
+            "Qwen inference is temporarily unavailable. "
+            "Please try again later."
+        ),
+    )
     result["created_at"] = datetime.now(timezone.utc)
     response = PredictionResponse(**result)
 
