@@ -2,6 +2,7 @@
 import logging
 import os
 import re
+import uuid
 from functools import lru_cache
 
 from gradio_client import Client
@@ -55,6 +56,7 @@ def predict_with_qwen(features: dict) -> dict:
         label = int(match.group(1))
 
         return {
+            "prediction_id": str(uuid.uuid4()),
             "model_name": "Qwen3-4B-LoRA",
             "model_mode": "qwen",
             "readmission_within_30_days": label,
