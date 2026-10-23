@@ -685,9 +685,14 @@ async function api(path, options={}) {
   let response;
   try {
     response = await fetch(API_BASE + path, {...options, headers});
-  } catch {
-    throw new Error('Cannot reach backend. Start FastAPI at http://127.0.0.1:8000 and check CORS settings.');
+  
+  } catch (error) {
+    console.error("RESURE backend request failed:", error);
+    throw new Error(
+      "Cannot reach RESURE backend. Check the browser Console and Network tabs for the actual error."
+    );
   }
+
   const body = await response.json().catch(()=>({}));
   if(!response.ok) {
     const detail = body.detail;
@@ -1019,13 +1024,29 @@ $('#predictForm').addEventListener('submit', async e => {
   const btn = $('#predictBtn'); btn.disabled = true; btn.innerHTML = '<div class="spinner"></div><span>Requesting model...</span>';
   try {
     const result = await api('/predictions', {method:'POST', body:JSON.stringify({features:makeModelFeatures(f)})});
-    const raw = Number(result.readmission_probability);
-    if(!Number.isFinite(raw)) throw new Error('The backend response did not include a valid readmission_probability.');
-    const p = Math.max(0,Math.min(100,Math.round(raw <= 1 ? raw*100 : raw)));
-    showResult({p, factors:[]}, f);
-    const summary = $('#gSummary');
-    if(summary) summary.textContent = `Backend model output: ${p}% estimated probability. Research only — not clinically validated.`;
-    toast('Prediction returned by backend');
+   
+const predictedClass = Number(result.readmission_within_30_days);
+
+if (![0, 1].includes(predictedClass)) {
+  throw new Error('The backend did not return a valid Qwen classification.');
+}
+
+// Display a class label, NOT a probability percentage.
+const p = predictedClass === 1 ? 100 : 0;
+showResult({p, factors:[]}, f);
+
+const summary = $('#gSummary');
+if (summary) {
+  summary.textContent =
+    `Qwen research classification: ${
+      predictedClass === 1
+        ? 'Readmission predicted within 30 days'
+        : 'Readmission not predicted within 30 days'
+    }. This is a class label, not a probability. Research only — not clinically validated.`;
+}
+
+$('#gPct').textContent = predictedClass === 1 ? 'Class 1' : 'Class 0';
+
     try { await refreshBackendData(); } catch {}
   } catch(err) {
     toast('Prediction failed: ' + err.message);
